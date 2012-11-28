@@ -95,12 +95,19 @@ i18nFields{
 	extraLocales = ["rw"]
 }
 
+// URL of the activity feed, has to display all the pages
 sync.activity.feed.url = "http://resmap-stg.instedd.org/api/activity.rss?collection_ids[]=694&page=all"
+// URL of the paged full list, does not have to display all the pages since the service goes through the pages
 sync.full.list.url = "http://resmap-stg.instedd.org/api/collections/694.json"
+// URL of individual site information, where ${itemid} will be replaced by the actual site id
 sync.site.url = "http://resmap-stg.instedd.org/api/sites/${itemid}.json"
+// username and password of a user who has access to the URLs above
 sync.site.username = "username	"
 sync.site.password = "password"
+
+// this list of types will be ignored by the sync
 sync.type.ignore = ["MU", "PS"]
+// this specifies the mapping
 sync.type.mapping = [
 	"CS": "Health Center",
 	"DH": "District Hospital"

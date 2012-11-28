@@ -30,6 +30,7 @@ i18nFields{
 	extraLocales = ["rw"]
 }
 
+// rabbitmq-tasks needs this so the tests work
 rabbitmq {
 	connectionfactory {
 		username = 'guest'
@@ -38,8 +39,10 @@ rabbitmq {
 	}
 }
 
+// default mapping for tests
 sync.type.mapping = [
 	"CS": "Health Center",
 	"DH": "District Hospital"
 ]
+// the format of the date in the activity feed
 sync.date.format = "EEE, d MMM yyyy HH:mm:ss Z"

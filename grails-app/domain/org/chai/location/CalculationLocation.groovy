@@ -35,13 +35,13 @@ import i18nfields.I18nFields
 @i18nfields.I18nFields
 abstract class CalculationLocation {
 
-	// deprecated
-	Long id
-	
 	String code
 	String names
 	String coordinates
 	
+	// we keep the facility registry itemid here
+	// so that activity feed syncing works. this
+	// information should not be visible to the user
 	Long itemid
 	
 	static i18nFields = ['names']
@@ -61,7 +61,6 @@ abstract class CalculationLocation {
 		code unique: true, index: "Code_Index"
 	}
 
-	
 	boolean collectLocations(List<Location> locations, List<DataLocation> dataLocations, def skipLevels, def types) {
 		boolean result = false;
 		for (Location child : getChildren(skipLevels)) {
