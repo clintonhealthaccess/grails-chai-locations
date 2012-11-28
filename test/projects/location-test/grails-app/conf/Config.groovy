@@ -94,3 +94,14 @@ i18nFields{
 	locales = ["en","fr","rw"]
 	extraLocales = ["rw"]
 }
+
+sync.activity.feed.url = "http://resmap-stg.instedd.org/api/activity.rss?collection_ids[]=694&page=all"
+sync.full.list.url = "http://resmap-stg.instedd.org/api/collections/694.json"
+sync.site.url = "http://resmap-stg.instedd.org/api/sites/${itemid}.json"
+sync.site.username = "username	"
+sync.site.password = "password"
+sync.type.ignore = ["MU", "PS"]
+sync.type.mapping = [
+	"CS": "Health Center",
+	"DH": "District Hospital"
+]

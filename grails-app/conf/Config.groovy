@@ -20,9 +20,26 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+
+	debug  'groovyx.net'
+	debug  'grails.app'
 }
 
 i18nFields{
 	locales = ["en","fr","rw"]
 	extraLocales = ["rw"]
 }
+
+rabbitmq {
+	connectionfactory {
+		username = 'guest'
+		password = 'guest'
+		hostname = '127.0.0.1'
+	}
+}
+
+sync.type.mapping = [
+	"CS": "Health Center",
+	"DH": "District Hospital"
+]
+sync.date.format = "EEE, d MMM yyyy HH:mm:ss Z"

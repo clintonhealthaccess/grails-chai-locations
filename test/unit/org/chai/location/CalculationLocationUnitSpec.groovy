@@ -234,6 +234,25 @@ class CalculationLocationUnitSpec extends UnitSpec {
 		
 	}
 	
+	def "get parent of level"() {
+		setup:
+		def country = new LocationLevel(code: "country")
+		def province = new LocationLevel(code: "province")
+		def district = new LocationLevel(code: "district")
+
+		when:
+		def rwanda = new Location(code: "rwanda", level: country)
+		def north = new Location(code: "north", parent: rwanda, level: province)
+		def burera = new Location(code: "burera", parent: north, level: district)
+	
+		then:
+		rwanda.getParentOfLevel(country) == rwanda
+		rwanda.getParentOfLevel(province) == null
+		burera.getParentOfLevel(coutry) == rwanda
+		burera.getParentOfLevel(province) == north
+		burera.getParentOfLevel(district) == burera
+	}
+	
 	def "test get children entities with data locations"() {
 		setup:
 		def country = new LocationLevel(code: "country")

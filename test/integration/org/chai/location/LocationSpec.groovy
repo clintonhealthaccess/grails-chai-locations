@@ -140,7 +140,7 @@ class LocationSpec extends IntegrationTests {
 		children = Location.findByCode(BURERA).getChildrenLocations(skipLevels, types)
 		
 		then:
-		children.equals([DataLocation.findByCode(KIVUYE), DataLocation.findByCode(BUTARO)])
+		children.equals([DataLocation.findByCode(BUTARO), DataLocation.findByCode(KIVUYE)])
 		children.findAll{ it -> !it.collectsData() }.size() == 0
 		children.findAll{ it -> it.collectsData() }.size() == 2
 	}
@@ -185,7 +185,7 @@ class LocationSpec extends IntegrationTests {
 		def children = Location.findByCode(NORTH).collectTreeWithDataLocations(skipLevels, types, true)
 		
 		then:
-		children.equals([Location.findByCode(BURERA), Location.findByCode(NORTH), DataLocation.findByCode(KIVUYE), DataLocation.findByCode(BUTARO)])
+		children.equals([Location.findByCode(BURERA), Location.findByCode(NORTH), DataLocation.findByCode(BUTARO), DataLocation.findByCode(KIVUYE)])
 		children.findAll{ it -> !it.collectsData() }.size() == 2
 		children.findAll{ it -> it.collectsData() }.size() == 2
 		

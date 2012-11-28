@@ -72,7 +72,7 @@ abstract class IntegrationTests extends IntegrationSpec {
 	}
 	
 	public static def newDataLocationType(def names, def code) {
-		def dataLocationType = new DataLocationType(code: code)
+		def dataLocationType = new DataLocationType(code: code, defaultSelected: false)
 		setLocaleValueInMap(dataLocationType,names,"Names")
 		return dataLocationType.save(failOnError: true)
 	}

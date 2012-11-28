@@ -1,4 +1,4 @@
-package org.chai.location;
+package org.chai.task
 
 /*
  * Copyright (c) 2012, Clinton Health Access Initiative.
@@ -28,65 +28,49 @@ package org.chai.location;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class DataLocation extends CalculationLocation {
+import org.chai.location.IntegrationTests
+import org.chai.location.SyncService
 
-	Boolean needsReview
+import org.apache.commons.io.FileUtils
+
+class SyncTaskSpec extends IntegrationTests {
 		
-	Date dateCreated
+	def "test output when exception occurs"() {
+		setup:
+		def task = new SyncTask()
+		task.syncService = new SyncService()
+		task.syncService.metaClass.syncFromFullList = {throw new Exception("exception occurred")}
+		def tmpDir = new File('tmp')
+		tmpDir.mkdir()
+		task.metaClass.getFolder = {return tmpDir}
+		
+		when:
+		task.executeTask()
+		
+		then:
+		new File(task.getFolder(), task.getOutputFilename()).text == "An exception occurred trying to sync locations: exception occurred"
+		
+		cleanup:
+		FileUtils.deleteDirectory(tmpDir)
+	}
 	
-	DataLocationType type
-	Location location
-	
-	DataLocation managedBy
-	
-	static hasMany = [
-		manages: DataLocation,
-		changes: SyncChange
-	]
+	def "test output when everything is ok"() {
+		setup:
+		def task = new SyncTask()
+		task.syncService = new SyncService()
+		task.syncService.metaClass.syncFromFullList = {return}
+		def tmpDir = new File('tmp')
+		tmpDir.mkdir()
+		task.metaClass.getFolder = {return tmpDir}
 
-	static mapping = {
-		table "chai_location_data_location"
-		type column: 'type'
-		location column: 'location'
-	}
+		when:
+		task.executeTask()
 
-	static constraints = {
-		type nullable: false
-		location nullable: false
-		managedBy nullable: true
-		needsReview nullable: true
-	}
-	
-	List<DataLocation> getDataLocations() {
-		def result = new ArrayList<DataLocation>();
-		result.add(this);
-		return result;
-	}
+		then:
+		new File(task.getFolder(), task.getOutputFilename()).text == "Location sync was successful."
 
-	List<Location> getChildren() {
-		return new ArrayList<Location>();
-	}
-	
-	List<DataLocation> getDataLocations(Set<LocationLevel> skipLevels, Set<DataLocationType> types) {
-		def result = new ArrayList<DataLocation>();
-		if (types == null || types.contains(type)) result.add(this);
-		return result;
-	}
-
-	List<Location> getChildren(Set<LocationLevel> skipLevels) {
-		return getChildren();
-	}
-	
-	Location getParentOfLevel(LocationLevel level) {
-		return this.location?.getParentOfLevel(level)
-	}
-	
-	boolean collectsData() {
-		return true;
-	}
-	
-	String toString() {
-		return "DataLocation[Id=" + id + ", Code=" + code + "]";
+		cleanup:
+		FileUtils.deleteDirectory(tmpDir)
 	}
 	
 }
