@@ -52,7 +52,7 @@ grails.project.dependency.resolution = {
         }
 		compile ":hibernate:$grailsVersion"
 		compile ":i18n-fields:0.6.3-CHAI"
-		compile (":rabbitmq-tasks:0.5.3-SNAPSHOT")
+		compile (":rabbitmq-tasks:0.5.4")
 		
 		test ":spock:0.6"
     }
