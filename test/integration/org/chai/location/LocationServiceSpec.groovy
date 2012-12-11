@@ -27,20 +27,7 @@ class LocationServiceSpec extends IntegrationTests {
 		BURERA		| DISTRICT	| [BURERA]
 		BURERA		| NATIONAL	| []
 	}
-	
-	def "get parent of level for location"() {
-		setup:
-		setupLocationTree()
-		
-		expect:
-		locationService.getParentOfLevel(Location.findByCode(location), LocationLevel.findByCode(level)).equals(Location.findByCode(expectedLocation))
 
-		where:
-		location| level		| expectedLocation
-		NORTH	| NATIONAL	| RWANDA
-		BURERA	| NATIONAL	| RWANDA
-		
-	}
 	
 	def "get data location by code"(){
 		setup:
@@ -280,36 +267,5 @@ class LocationServiceSpec extends IntegrationTests {
 		then:
 		levelAfter.equals(LocationLevel.findByCode(SECTOR))
 	}
-	def "test get data locations of type"(){
-		setup:
-		setupLocationTree()
-		
-		def locations = new HashSet([Location.findByCode(BURERA), DataLocation.findByCode(KIVUYE), DataLocation.findByCode(BUTARO)])
-		
-		def typeOne = new HashSet();
-		def typeTwo = new HashSet();
-		def typeThree = new HashSet();
-		
-		def hc = DataLocationType.findByCode(HEALTH_CENTER_GROUP);
-		def dh = DataLocationType.findByCode(DISTRICT_HOSPITAL_GROUP);
-		
-		typeOne.add(hc);
-		typeTwo.add(dh);
-		typeThree.add(hc);
-		typeThree.add(dh);
-
-		when:
-		def caseOne = locationService.getDataLocationsOfType(locations,typeOne);
-		def caseTwo = locationService.getDataLocationsOfType(locations,typeTwo);
-		def caseThree = locationService.getDataLocationsOfType(locations,typeThree);
-		def listDataLocations =[DataLocation.findByCode(KIVUYE), DataLocation.findByCode(BUTARO)]
-		
-		then:
-		caseOne.equals([DataLocation.findByCode(KIVUYE)]);
-		caseTwo.equals([DataLocation.findByCode(BUTARO)]);
-		caseThree.size()==2
-		listDataLocations.size()==2
-		caseThree.equals(listDataLocations);
-		
-	}
+	
 }

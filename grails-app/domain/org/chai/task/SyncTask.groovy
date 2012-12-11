@@ -1,4 +1,4 @@
-package org.chai.location;
+package org.chai.task
 
 /*
  * Copyright (c) 2012, Clinton Health Access Initiative.
@@ -28,65 +28,50 @@ package org.chai.location;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Class for a data location. A data location is a location that collects data. It
- * has a parent location, a type and can be optionally managed by another data location.
- */
-class DataLocation extends CalculationLocation {
+import org.apache.commons.io.IOUtils;
 
-	Long id
+class SyncTask extends Task {
+	
+	def syncService
+	
+	def executeTask() {
+		File outputFile = new File(getFolder(), getOutputFilename())
+		outputFile.createNewFile()
 
-	Boolean needsReview
+		def fileWriter = new FileWriter(outputFile)		
+		try {
+			syncService.syncFromFullList()
+			IOUtils.write("Location sync was successful.", fileWriter)
+		} catch (Exception e) {
+			IOUtils.write("An exception occurred trying to sync locations: "+e.message, fileWriter)
+		}
 		
-	Date dateCreated
-	
-	DataLocationType type
-	Location location
-	
-	DataLocation managedBy
-	
-	static hasMany = [
-		manages: DataLocation,
-		changes: SyncChange
-	]
-
-	static mapping = {
-		table "chai_location_data_location"
-		type column: 'type'
-		location column: 'location'
-	}
-
-	static constraints = {
-		type nullable: false
-		location nullable: false
-		managedBy nullable: true
-		needsReview nullable: true
+		fileWriter.flush()
+		IOUtils.closeQuietly(fileWriter)
 	}
 	
-	@Override
-	List<CalculationLocation> getChildren(def skipLevels) {
-		return [];
+	String getInformation() {
+		return null
 	}
 	
-	@Override
-	List<DataLocation> getDataLocations(def skipLevels, def types) {
-		def result = new ArrayList<DataLocation>();
-		if (types == null || types.contains(type)) result.add(this);
-		return result;
+	boolean isUnique() {
+		return true
 	}
 	
-	@Override
-	Location getParentOfLevel(LocationLevel level) {
-		return this.location?.getParentOfLevel(level)
+	def cleanTask() {
+		// nothing to do here
 	}
 	
-	@Override
-	boolean collectsData() {
-		return true;
+	String getOutputFilename() {
+		return "errors.txt"
 	}
 	
-	String toString() {
-		return "DataLocation[Id=" + id + ", Code=" + code + "]";
+	String getFormView() {
+		return null
+	}
+	
+	Map getFormModel() {
+		return null
 	}
 	
 }

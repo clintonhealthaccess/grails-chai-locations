@@ -1,4 +1,4 @@
-package org.chai.location;
+package org.chai.location
 
 /*
  * Copyright (c) 2012, Clinton Health Access Initiative.
@@ -29,64 +29,23 @@ package org.chai.location;
  */
 
 /**
- * Class for a data location. A data location is a location that collects data. It
- * has a parent location, a type and can be optionally managed by another data location.
+ * Everytime the sync runs, sync logs are kept using one instance of this class. The
+ * information it holds is whether the change requires user review, the date and
+ * correspding user messages that help review the changes.
  */
-class DataLocation extends CalculationLocation {
-
-	Long id
-
-	Boolean needsReview
-		
+class SyncChange {
+	
 	Date dateCreated
 	
-	DataLocationType type
-	Location location
+	Boolean needsReview
+	Boolean reviewed
 	
-	DataLocation managedBy
+	static belongsTo = [dataLocation: DataLocation]
+	static hasMany = [messages: String]
 	
-	static hasMany = [
-		manages: DataLocation,
-		changes: SyncChange
-	]
-
 	static mapping = {
-		table "chai_location_data_location"
-		type column: 'type'
-		location column: 'location'
-	}
-
-	static constraints = {
-		type nullable: false
-		location nullable: false
-		managedBy nullable: true
-		needsReview nullable: true
-	}
-	
-	@Override
-	List<CalculationLocation> getChildren(def skipLevels) {
-		return [];
-	}
-	
-	@Override
-	List<DataLocation> getDataLocations(def skipLevels, def types) {
-		def result = new ArrayList<DataLocation>();
-		if (types == null || types.contains(type)) result.add(this);
-		return result;
-	}
-	
-	@Override
-	Location getParentOfLevel(LocationLevel level) {
-		return this.location?.getParentOfLevel(level)
-	}
-	
-	@Override
-	boolean collectsData() {
-		return true;
-	}
-	
-	String toString() {
-		return "DataLocation[Id=" + id + ", Code=" + code + "]";
+		table "chai_location_sync_change"
+		messages joinTable: [name: 'chai_location_sync_change_messages', type: 'text']
 	}
 	
 }
