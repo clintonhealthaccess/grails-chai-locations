@@ -129,20 +129,20 @@ class LocationSpec extends IntegrationTests {
 		def newDataLocation = newDataLocation(["en":"BLAH"], "BLAH", Location.findByCode(NORTH), DataLocationType.findByCode(HEALTH_CENTER_GROUP))
 		
 		when: //with a mix of locations and data locations
-		def children = Location.findByCode(NORTH).getChildrenLocations(skipLevels, types)
+		def children = Location.findByCode(NORTH).getChildren(skipLevels)
+		def dataLocations = Location.findByCode(NORTH).getDataLocations(skipLevels, types)
 		
 		then:
-		children.equals([Location.findByCode(BURERA), DataLocation.findByCode("BLAH")])
-		children.findAll{ it -> !it.collectsData() }.size() == 1
-		children.findAll{ it -> it.collectsData() }.size() == 1
+		children.equals([Location.findByCode(BURERA)])
+		dataLocations.equals([DataLocation.findByCode("BLAH")])
 		
 		when: //with only data locations
-		children = Location.findByCode(BURERA).getChildrenLocations(skipLevels, types)
+		children = Location.findByCode(BURERA).getChildren(skipLevels)
+		dataLocations = Location.findByCode(BURERA).getDataLocations(skipLevels, types)
 		
 		then:
-		children.equals([DataLocation.findByCode(BUTARO), DataLocation.findByCode(KIVUYE)])
-		children.findAll{ it -> !it.collectsData() }.size() == 0
-		children.findAll{ it -> it.collectsData() }.size() == 2
+		children.equals([])
+		dataLocations.equals([DataLocation.findByCode(BUTARO), DataLocation.findByCode(KIVUYE)])
 	}
 	
 	def "get children with data"(){
@@ -155,21 +155,11 @@ class LocationSpec extends IntegrationTests {
 		])
 		def newDataLocation = newDataLocation(["en":"BLAH"], "BLAH", Location.findByCode(NORTH), DataLocationType.findByCode(HEALTH_CENTER_GROUP))
 		
-		when: //with data locations
-		def children = Location.findByCode(NORTH).getChildrenEntitiesWithDataLocations(skipLevels, types, true)
-		
-		then:
-		children.equals([Location.findByCode(BURERA), DataLocation.findByCode("BLAH")])
-		children.findAll{ it -> !it.collectsData() }.size() == 1
-		children.findAll{ it -> it.collectsData() }.size() == 1
-		
-		when: //without data locations
-		children = Location.findByCode(NORTH).getChildrenEntitiesWithDataLocations(skipLevels, types, false)
+		when:
+		def children = Location.findByCode(NORTH).getChildrenEntitiesWithDataLocations(skipLevels, types)
 		
 		then:
 		children.equals([Location.findByCode(BURERA)])
-		children.findAll{ it -> !it.collectsData() }.size() == 1
-		children.findAll{ it -> it.collectsData() }.size() == 0
 	}
 	
 	def "get location tree with data"(){
@@ -181,20 +171,11 @@ class LocationSpec extends IntegrationTests {
 			DataLocationType.findByCode(HEALTH_CENTER_GROUP)
 		])
 		
-		when: //with data locations
-		def children = Location.findByCode(NORTH).collectTreeWithDataLocations(skipLevels, types, true)
+		when: 
+		def children = Location.findByCode(NORTH).collectTreeWithDataLocations(skipLevels, types)
 		
 		then:
-		children.equals([Location.findByCode(BURERA), Location.findByCode(NORTH), DataLocation.findByCode(BUTARO), DataLocation.findByCode(KIVUYE)])
-		children.findAll{ it -> !it.collectsData() }.size() == 2
-		children.findAll{ it -> it.collectsData() }.size() == 2
-		
-		when: //without data locations
-		children = Location.findByCode(NORTH).collectTreeWithDataLocations(skipLevels, types, false)
-		
-		then:
-		children.equals([Location.findByCode(BURERA), Location.findByCode(NORTH)])
-		children.findAll{ it -> !it.collectsData() }.size() == 2
-		children.findAll{ it -> it.collectsData() }.size() == 0
+		children.equals([Location.findByCode(BURERA), Location.findByCode(NORTH)])	
 	}
+
 }

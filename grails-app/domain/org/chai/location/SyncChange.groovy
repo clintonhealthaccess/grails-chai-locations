@@ -28,12 +28,17 @@ package org.chai.location
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
+/**
+ * Everytime the sync runs, sync logs are kept using one instance of this class. The
+ * information it holds is whether the change requires user review, the date and
+ * correspding user messages that help review the changes.
+ */
 class SyncChange {
 	
 	Date dateCreated
 	
 	Boolean needsReview
+	Boolean reviewed
 	
 	static belongsTo = [dataLocation: DataLocation]
 	static hasMany = [messages: String]

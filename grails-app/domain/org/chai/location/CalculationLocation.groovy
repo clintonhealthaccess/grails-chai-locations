@@ -31,6 +31,11 @@ package org.chai.location;
 import groovy.transform.EqualsAndHashCode
 import i18nfields.I18nFields
 
+
+/**
+ * Super class for all locations. Holds the name, the code (unique property) and the coordinates of
+ * that location. 
+ */
 @EqualsAndHashCode(includes='code')
 @i18nfields.I18nFields
 abstract class CalculationLocation {
@@ -67,7 +72,7 @@ abstract class CalculationLocation {
 			result = result | child.collectLocations(locations, dataLocations, skipLevels, types);
 		}
 		
-		List<DataLocation> dataLocationsChildren = getDataLocations(skipLevels, types)
+		List<DataLocation> dataLocationsChildren = getDataLocations(null, types)
 		if (!dataLocationsChildren.isEmpty()) {
 			result = true;
 			if (dataLocations != null) dataLocations.addAll(dataLocationsChildren);
@@ -79,14 +84,59 @@ abstract class CalculationLocation {
 		return result;
 	}
 	
-	List<DataLocation> collectDataLocations(def skipLevels, def types) {
+	/**
+	 * Collects all data locations of the specified types that are children of this location. If types is
+	 * {@code null}, returns all data locations that are children of this location.
+	 *
+	 * @return all data locations of the specified types.
+	 */
+	List<DataLocation> collectDataLocations(def types) {
 		List<DataLocation> dataLocations = new ArrayList<DataLocation>();
-		collectLocations(null, dataLocations, skipLevels, types);
+		collectLocations(null, dataLocations, null, types);
 		return dataLocations;
 	}
 	
+	/**
+	 * Returns all the data locations that are direct children of this location, and whose
+	 * type is in the list specified by types. If this location is the parent of locations
+	 * whose level is in the skipLevels list, it returns also the children's data locations.
+	 *
+	 * @param skipLevels if this location has children whose level is in this list, the data locations
+	 * of those children are also returned. If skipLevels is {@code null}, skip levels are ignored.
+	 * @param types returns only the data locations whose type is in this list, returns all data locations
+	 * if types is {@code null}.
+	 * @return the list of data locations.
+	 */
+	abstract List<DataLocation> getDataLocations(def skipLevels, def types)
+	
+	/**
+	 * Returns all the location (data or not) that are direct children of this location. If this
+	 * location is the parent of locations whose level is in the skipLevels list, it returns also
+	 * the children's locations.
+	 *
+	 * @param skipLevels if this location has children whose level is in this list, the locations
+	 * of those children are also returned. If skipLevels is {@code null}, skip levels are ignored.
+	 * @return the list of locations
+	 */
+	abstract List<CalculationLocation> getChildren(def skipLevels)
+	
+	/**
+	 * Navigates up through all the parents in the tree and returns the one with the specified level.
+	 * If this location is of the specified level, it returns this location. If no parents have the
+	 * specified level, it returns {@code null}.
+	 *
+	 * @param level the level of the parent we want to retrieve
+	 * @return the parent with the specified level
+	 */
 	abstract Location getParentOfLevel(LocationLevel level)
 	
+	/**
+	 * Returns true if this location collects data, false otherwise. If it returns
+	 * true, then this object should be castable to DataLocation, otherwise
+	 * it should cast to Location.
+	 *
+	 * @return true if this location collects data, false otherwise.
+	 */
 	abstract boolean collectsData();
 	
 	String getLabel() {

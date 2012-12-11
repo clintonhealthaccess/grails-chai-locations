@@ -113,6 +113,7 @@ class SyncService {
 		while (url != null) {
 			def json = getFullListPage(url)
 			
+			// json.sites is the list of all facilities, we iterate over it
 			json.sites.each { site ->
 				log.debug("syncing site: ${site.id}, code: ${site.properties[PROPERTY_CODE]}")
 				sitesSeen << site.id + ''
@@ -136,7 +137,7 @@ class SyncService {
 		DataLocation.list().each { location ->
 			if (location.itemid == null || !sitesSeen.contains(location.itemid + '')) {
 				// we delete in that case
-				log.debug("site with itemid ${location.itemid} was not in full list, deleting")
+				log.debug("facility with itemid ${location.itemid} was not in full list, deleting")
 				deleteDataLocation(location)
 			}
 		}
@@ -219,16 +220,16 @@ class SyncService {
 		}
 		else {
 			DataLocation dataLocation = DataLocation.findByCode(site.properties[PROPERTY_CODE])
-			SyncChange change = new SyncChange(needsReview: false)
+			SyncChange change = new SyncChange(needsReview: false, reviewed: false)
 		
 			
 			if (dataLocation != null) {
 				change.needsReview = true
-				change.addToMessages "Data location already exists: ${site.properties[PROPERTY_CODE]}"
+				change.addToMessages "Facility already exists: ${site.properties[PROPERTY_CODE]}"
 			}
 			else {
 		 		dataLocation = new DataLocation(code: site.properties[PROPERTY_CODE])
-				change.addToMessages "Created site ${site.name}, code: ${dataLocation.code}"
+				change.addToMessages "Created facility ${site.name}, code: ${dataLocation.code}"
 			}
 		
 			DataLocationType type = DataLocationType.findByCode(getLocationTypeMapping().get(site.properties[PROPERTY_TYPE])?:'')
@@ -273,13 +274,13 @@ class SyncService {
 		log.debug("changing site with code: ${site.properties[PROPERTY_CODE]}, type: ${site.properties[PROPERTY_TYPE]}, parent: ${site.properties[PROPERTY_PARENT]}")
 		
 		DataLocation dataLocation = DataLocation.findByCode(site.properties[PROPERTY_CODE])
-		SyncChange change = new SyncChange(needsReview: false)
+		SyncChange change = new SyncChange(needsReview: false, reviewed: false)
 		DataLocationType type = DataLocationType.findByCode(getLocationTypeMapping().get(site.properties[PROPERTY_TYPE])?:'')
 		Location parent = Location.findByCode(site.properties[PROPERTY_PARENT]?:'')
 		
 		if (dataLocation == null) {
 			change.needsReview = true
-			change.addToMessages "Data location does not exist: ${site.properties[PROPERTY_CODE]}"
+			change.addToMessages "Facility does not exist: ${site.properties[PROPERTY_CODE]}"
 			dataLocation = new DataLocation(code: site.properties[PROPERTY_CODE])
 			
 			if (type != null) type.addToDataLocations(dataLocation)
@@ -321,8 +322,8 @@ class SyncService {
 	}
 	
 	def deleteDataLocation(def dataLocation) {
-		SyncChange change = new SyncChange(needsReview: true)
-		change.addToMessages "Data location was deleted."
+		SyncChange change = new SyncChange(needsReview: true, reviewed: false)
+		change.addToMessages "Facility was deleted."
 		dataLocation.addToChanges(change)
 		
 		dataLocation.needsReview = true

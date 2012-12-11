@@ -28,7 +28,13 @@ package org.chai.location;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Class for a data location. A data location is a location that collects data. It
+ * has a parent location, a type and can be optionally managed by another data location.
+ */
 class DataLocation extends CalculationLocation {
+
+	Long id
 
 	Boolean needsReview
 		
@@ -57,30 +63,24 @@ class DataLocation extends CalculationLocation {
 		needsReview nullable: true
 	}
 	
-	List<DataLocation> getDataLocations() {
-		def result = new ArrayList<DataLocation>();
-		result.add(this);
-		return result;
-	}
-
-	List<Location> getChildren() {
-		return new ArrayList<Location>();
+	@Override
+	List<CalculationLocation> getChildren(def skipLevels) {
+		return [];
 	}
 	
-	List<DataLocation> getDataLocations(Set<LocationLevel> skipLevels, Set<DataLocationType> types) {
+	@Override
+	List<DataLocation> getDataLocations(def skipLevels, def types) {
 		def result = new ArrayList<DataLocation>();
 		if (types == null || types.contains(type)) result.add(this);
 		return result;
 	}
-
-	List<Location> getChildren(Set<LocationLevel> skipLevels) {
-		return getChildren();
-	}
 	
+	@Override
 	Location getParentOfLevel(LocationLevel level) {
 		return this.location?.getParentOfLevel(level)
 	}
 	
+	@Override
 	boolean collectsData() {
 		return true;
 	}

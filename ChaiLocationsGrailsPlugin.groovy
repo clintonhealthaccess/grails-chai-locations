@@ -43,7 +43,7 @@ class ChaiLocationsGrailsPlugin {
     def author = "Eugene Munyaneza"
     def authorEmail = "emunyaneza@clintonhealthaccess.org"
     def description = '''\
-CHAI locations plugin.
+Location plugin for Clinton Health Access Initiative projects, DHSST - https://github.com/fterrier/kevin and MEMMS - https://github.com/kahigiso/memms
 '''
 
     def documentation = "http://github.org/uginm102/grails-chai-locations"

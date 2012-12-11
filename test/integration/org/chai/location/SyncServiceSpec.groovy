@@ -115,7 +115,7 @@ class SyncServiceSpec extends IntegrationTests {
 		SyncChange.list()[0].needsReview == false
 	}
 	
-	def "test add site when type is in ignore list"() {
+	def "test add site when type is ignored"() {
 		setup:
 		setupLocationTree()
 		def xml = prepareXML('site', 'created', 100000)
