@@ -72,7 +72,7 @@ abstract class CalculationLocation {
 			result = result | child.collectLocations(locations, dataLocations, skipLevels, types);
 		}
 		
-		List<DataLocation> dataLocationsChildren = getDataLocations(null, types)
+		List<DataLocation> dataLocationsChildren = getDataLocations(skipLevels, types)
 		if (!dataLocationsChildren.isEmpty()) {
 			result = true;
 			if (dataLocations != null) dataLocations.addAll(dataLocationsChildren);

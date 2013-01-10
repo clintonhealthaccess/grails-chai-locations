@@ -299,4 +299,42 @@ class CalculationLocationUnitSpec extends UnitSpec {
 		dataLocations == [data1]
 	}
 	
+	def "test collect locations with skip levels"() {
+		setup:
+		def country = new LocationLevel(code: "country")
+		def province = new LocationLevel(code: "province")
+		def district = new LocationLevel(code: "district")
+		def rwanda = new Location(code: "rwanda", level: country)
+		def north = new Location(code: "north", parent: rwanda, level: province)
+		def burera = new Location(code: "burera", parent: north, level: district)
+		rwanda.children = [north]
+		north.children = [burera]
+		def type1 = new DataLocationType(code: 'type1')
+		def data1 = new DataLocation(code: 'data1', location: burera, type: type1)
+		burera.dataLocations = [data1]
+		def locations 
+		def dataLocations 
+		
+		when:
+		locations = []
+		dataLocations = []
+		rwanda.collectLocations(locations, dataLocations, new HashSet([province]), null)
+		
+		then:
+		locations == [burera, rwanda]
+		dataLocations == [data1]
+		
+		when:
+		def type2 = new DataLocationType(code: 'type2')
+		def data2 = new DataLocation(code: 'data2', location: rwanda, type: type2)
+		rwanda.dataLocations = [data2]
+		locations = []
+		dataLocations = []
+		rwanda.collectLocations(locations, dataLocations, new HashSet([district]), new HashSet([type1]))
+		
+		then:
+		locations == [north, rwanda]
+		dataLocations == [data1]
+	}
+	
 }

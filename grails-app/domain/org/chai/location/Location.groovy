@@ -142,8 +142,6 @@ class Location extends CalculationLocation {
 	 * {@code null}, returns all locations that are children of this location and whose tree contains
 	 * at least one data location. Does not include the locations that are in the skipLevels list.
 	 * 
-	 * If data is true, also includes the data locations.
-	 * 
 	 * @param skipLevels ignores location whose level is in this list
 	 * @param types only considers data location types that are in this list
 	 * @return all locations of the specified types that are children of this location and whose tree contains at least
