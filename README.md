@@ -8,7 +8,24 @@ It provides a location structure for the country, and a sync mechanism that inte
 Structure
 ---
 
-The location sctructure stores Facilities (Data Location) and their corresponding type, such as Health Center and District Hospital (Data Location Type), as well as Administrative Locations such as country, provinces, districts, sectors (Location) and their corresponding level, such as Country, Province, District (Location Level).
+We distinguish **locations** and **data locations**. **Locations** are structural entities, like for example the regions of a country (like provinces, districts or states). **Data locations** are entities where data is collected, they can, if we take the example of health sector data, hospitals, health centers or pharmacies, or in the education sector, they would be schools.
+
+**Locations** are all associated to a certain **location level**. A **location level** could be for example the country, province or district. **Data locations** are associated to a **data location type**, which could be, in the health sector example, a district hospital or a pharmacy.
+
+For this documentation, we will take the example of health sector data in Rwanda, so the data locations will be health centers, hospitals, pharmacies, etc… and the locations will be provinces and districts (as given by Rwanda's administrative structure). Let's for example take the structure below :
+
+	Location Level		Location / Data Location (Data Location Type)
+	-------------		---------------------------------------------
+	country						   Rwanda
+								   /    \
+	province					North    South
+								/		   \\
+	district				Burera		   Butare DH (hospital)
+					 	   //	 \\
+						 //		Kivuye HC (health center)
+					Butaro DH (hospital)
+	
+In this diagram, single links (with ```/```) denote a structural relationship between locations, and double links (with ```//```) denote a link between a data location and its corresponding 
 
 Configuration
 ---

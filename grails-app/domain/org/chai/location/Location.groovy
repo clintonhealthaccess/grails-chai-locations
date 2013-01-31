@@ -124,6 +124,7 @@ class Location extends CalculationLocation {
 	 * and whose type is in the specified list
 	 */
 	List<CalculationLocation> getChildrenEntitiesWithDataLocations(def skipLevels, def types) {
+		if (log.debugEnabled) log.debug("getChildrenEntitiesWithDataLocations(${skipLevels}, ${types})")
 		def result = new ArrayList<CalculationLocation>();
 		
 		def locationChildren = getChildren(skipLevels);
@@ -133,6 +134,7 @@ class Location extends CalculationLocation {
 				result.add(locationChild);	
 		}
 		
+		if (log.debugEnabled) log.debug("getChildrenEntitiesWithDataLocations(...)=${result}")
 		return result;
 	}
 	
