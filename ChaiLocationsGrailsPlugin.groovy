@@ -28,7 +28,7 @@
 
 class ChaiLocationsGrailsPlugin {
 	
-    def version = "0.5.1-CHAI"
+    def version = "0.5.2-CHAI"
     def grailsVersion = "1.3.7 > *"
     def dependsOn = [:]
     def pluginExcludes = [
