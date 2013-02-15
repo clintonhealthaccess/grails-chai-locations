@@ -8,9 +8,9 @@ It provides a location structure for the country, and a sync mechanism that inte
 Structure
 ---
 
-We distinguish **locations** and **data locations**. **Locations** are structural entities, like for example the regions of a country (like provinces, districts or states). **Data locations** are entities where data is collected, they can, if we take the example of health sector data, hospitals, health centers or pharmacies, or in the education sector, they would be schools.
+We distinguish **locations** and **data locations**. **Locations** are structural entities, for example the regions of a country (provinces, districts or states). **Locations** are all associated to a certain **location level**. A **location level** could be for example the country, province or district. 
 
-**Locations** are all associated to a certain **location level**. A **location level** could be for example the country, province or district. **Data locations** are associated to a **data location type**, which could be, in the health sector example, a district hospital or a pharmacy.
+**Data locations** are entities where data is collected, they could be, if we take the example of health sector data, hospitals, health centers or pharmacies, or in the education sector, they would be schools. **Data locations** are associated to a **data location type**, which could be, in the health sector example, a district hospital or a pharmacy.
 
 For this documentation, we will take the example of health sector data in Rwanda, so the data locations will be health centers, hospitals, pharmacies, etc… and the locations will be provinces and districts (as given by Rwanda's administrative structure). Let's for example take the structure below :
 
@@ -25,7 +25,7 @@ For this documentation, we will take the example of health sector data in Rwanda
 						 //		Kivuye HC (health center)
 					Butaro DH (hospital)
 	
-In this diagram, single links (with ```/```) denote a structural relationship between locations, and double links (with ```//```) denote a link between a data location and its corresponding 
+In this diagram, single links (with ```/```) denote a structural relationship between locations, and double links (with ```//```) denote a link between a data location and its corresponding location.
 
 Configuration
 ---

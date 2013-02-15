@@ -56,7 +56,7 @@ public class LocationService {
 	}
 	
 	List<DataLocationType> listTypes() {
-		return DataLocationType.list([cache: true])
+		return DataLocationType.list([cache: true, flush: false])
 	}
 	
 	LocationLevel findLocationLevelByCode(String code) {
